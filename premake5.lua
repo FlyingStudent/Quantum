@@ -9,6 +9,15 @@ configurations {
 }
 --path variable
 outputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+
+--Include directories relative to root folder (solution directory)
+IncludeDir = {}
+IncludeDir["GLFW"] = "Quantum/vendor/GLFW/include"
+IncludeDir["glad"] = "Quantum/vendor/glad/include"
+IncludeDir["ImGui"] = "Quantum/vendor/ImGui"
+include "Quantum/vendor/GLFW"
+include "Quantum/vendor/glad"
+include "Quantum/vendor/ImGui"
 --create Quantum project
 project "Quantum"
 location "Quantum"
@@ -18,6 +27,9 @@ language "C++"
 targetdir("bin/" .. outputDir .. "/%{prj.name}")
 objdir("bin-int/" .. outputDir .. "/%{prj.name}")
 
+pchheader "qtpch.h"
+pchsource "Quantum/src/qtpch.cpp"
+
 files {
 	"%{prj.name}/src/**.h",
 	"%{prj.name}/src/**.cpp",
@@ -26,17 +38,28 @@ files {
 }
 includedirs {
 	"%{prj.name}/vendor/spdlog/include",
-	"Quantum/src"
+	"Quantum/src",
+	"%{IncludeDir.GLFW}",
+	"%{IncludeDir.glad}",
+	"%{IncludeDir.ImGui}"
 }
 
+--libdirs { "Quantum/vendor/GLFW/lib" }
+links {
+	"GLFW",
+	"ImGui",
+	"glad",
+	"opengl32.lib"
+}
 filter "system:windows"
 cppdialect "C++17"
-staticruntime "On"
+staticruntime "off"
 systemversion "latest"
 
 defines {
 	"QT_PLATFORM_WINDOWS",
-	"QT_BUILD_DLL"
+	"QT_BUILD_DLL",
+	"GLFW_INCLUDE_NONE"
 }
 
 postbuildcommands {
@@ -45,12 +68,15 @@ postbuildcommands {
 
 filter "configurations:Debug"
 defines "QT_DEBUG"
+buildoptions "/MDd"
 symbols "On"
 filter "configurations:Release"
 defines "QT_RELEASE"
+buildoptions "/MDd"
 optimize "On"
 filter "configurations:Dist"
 defines "QT_DIST"
+buildoptions "/MDd"
 optimize "On"
 
 --create SandBox project
@@ -79,7 +105,7 @@ links {
 
 filter "system:windows"
 cppdialect "C++17"
-staticruntime "On"
+staticruntime "off"
 systemversion "latest"
 
 defines {
@@ -88,10 +114,13 @@ defines {
 
 filter "configurations:Debug"
 defines "QT_DEBUG"
+buildoptions "/MDd"
 symbols "On"
 filter "configurations:Release"
 defines "QT_RELEASE"
+buildoptions "/MDd"
 optimize "On"
 filter "configurations:Dist"
 defines "QT_DIST"
+buildoptions "/MDd"
 optimize "On"
