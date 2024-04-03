@@ -10,6 +10,7 @@ int  main(int argc, char** argv)
 	int a = 5;
 	QT_CLIENT_INFO("Initialized Client Logger! Var={0}",a);
 	auto app = createApplication();
+	app->run();
 	delete app;
 	return 0;
 }

@@ -1,4 +1,5 @@
 #include "Log.h"
+#include"qtpch.h"
 namespace Quantum {
 std::shared_ptr<spdlog::logger> Log::s_CoreLogger;
 std::shared_ptr<spdlog::logger> Log::s_ClientLogger;

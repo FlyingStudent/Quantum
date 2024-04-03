@@ -1,5 +1,6 @@
 #pragma once
 #include"Quantum/Core.h"
+#include"Quantum/Log.h"
 #include<string>
 #include<functional>
 namespace Quantum {
@@ -9,7 +10,7 @@ namespace Quantum {
 		None = 0,
 		WindowClose, WindowResize,WindowFocus,WindowLostFocus,WindowMoved,
 		AppTick,AppUpdate,AppRender,
-		KeyPressed, KeyReleased,
+		KeyPressed, KeyReleased,KeyTyped,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
 	enum EventCategory {
@@ -36,8 +37,9 @@ virtual const char*getName() const override { return #type;}
 		}
 		inline bool isInCategory(EventCategory category)
 		{
-			return getCategoryFlags() & category;
+			return getCategoryFlags() && category;
 		}
+		inline bool isHandled() const { return m_Handled; }
 	protected :
 		bool m_Handled = false;
 	};

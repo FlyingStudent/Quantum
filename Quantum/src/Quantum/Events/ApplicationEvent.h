@@ -15,8 +15,8 @@ namespace Quantum {
 			ss << "WidnowResizeEvent: " << m_Width << ", " << m_Height;
 			return ss.str();
 		}
-		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 		EVENT_CLASS_TYPE(WindowResize)
+		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	private:
 		unsigned int m_Width, m_Height;
 	};
