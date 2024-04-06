@@ -1,5 +1,6 @@
 #include<Quantum.h>
 #include<iostream>
+#include<glm.hpp>
 class ExampleLayer : public Quantum::Layer
 {
 public:
@@ -9,6 +10,10 @@ public:
 	void onUpdate() override
 	{
 		QT_CLIENT_INFO("ExampleLayer::Update");
+		if(Quantum::Input::isKeyPressed(QT_KEY_TAB))
+		QT_CLIENT_INFO("Tab Key is pressed!");
+		glm::vec2 vec = glm::vec2(0.0f);
+		QT_CLIENT_TRACE("{0}", vec[0]);
 	}
 	void onEvent(Quantum::Event& event) override
 	{

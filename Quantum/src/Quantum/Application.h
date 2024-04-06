@@ -4,6 +4,7 @@
 #include"Events/ApplicationEvent.h"
 #include"Window.h"
 #include"LayerStack.h"
+#include"Input.h"
 namespace Quantum {
 
 	class QUANTUM_API Application

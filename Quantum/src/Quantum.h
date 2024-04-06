@@ -1,6 +1,9 @@
 #pragma once
 #include"Quantum/Application.h"
 #include"Quantum/Core.h"
+#include"Quantum/Input.h"
+#include"Quantum/MouseButtonsCode.h"
+#include"Quantum/KeyCode.h"
 #include"Quantum/Layer.h"
 #include"Quantum/ImGui/ImGuiLayer.h"
 //-------------entry point-----------

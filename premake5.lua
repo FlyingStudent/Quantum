@@ -7,6 +7,7 @@ configurations {
 	"Release",
 	"Dist"
 }
+startproject "SandBox"
 --path variable
 outputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -15,10 +16,15 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "Quantum/vendor/GLFW/include"
 IncludeDir["glad"] = "Quantum/vendor/glad/include"
 IncludeDir["ImGui"] = "Quantum/vendor/ImGui"
+IncludeDir["glm"] = "Quantum/vendor/glm"
+group "Dependencies"
 include "Quantum/vendor/GLFW"
 include "Quantum/vendor/glad"
 include "Quantum/vendor/ImGui"
+group ""
+
 --create Quantum project
+
 project "Quantum"
 location "Quantum"
 kind "SharedLib"
@@ -34,14 +40,17 @@ files {
 	"%{prj.name}/src/**.h",
 	"%{prj.name}/src/**.cpp",
 	"%{prj.name}/src/**.hpp",
-	"%{prj.name}/src/**.c"
+	"%{prj.name}/src/**.c",
+	"%{prj.name}/vendor/glm/**.hpp",
+	"%{prj.name}/vendor/glm/**.inl"
 }
 includedirs {
 	"%{prj.name}/vendor/spdlog/include",
 	"Quantum/src",
 	"%{IncludeDir.GLFW}",
 	"%{IncludeDir.glad}",
-	"%{IncludeDir.ImGui}"
+	"%{IncludeDir.ImGui}",
+	"%{IncludeDir.glm}"
 }
 
 --libdirs { "Quantum/vendor/GLFW/lib" }
@@ -63,20 +72,21 @@ defines {
 }
 
 postbuildcommands {
-	("{COPYFILE} %{cfg.buildtarget.relpath} ../bin/" .. outputDir .. "/SandBox")
+	("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputDir .. "/SandBox"),
+	('{COPY} %{cfg.buildtarget.relpath} "../bin/' .. outputDir .. '/SandBox/"')
 }
 
 filter "configurations:Debug"
 defines "QT_DEBUG"
-buildoptions "/MDd"
+runtime "Debug"
 symbols "On"
 filter "configurations:Release"
 defines "QT_RELEASE"
-buildoptions "/MDd"
+runtime "Release"
 optimize "On"
 filter "configurations:Dist"
 defines "QT_DIST"
-buildoptions "/MDd"
+runtime "Release"
 optimize "On"
 
 --create SandBox project
@@ -96,7 +106,8 @@ files {
 }
 includedirs {
 	"Quantum/vendor/spdlog/include",
-	"Quantum/src"
+	"Quantum/src",
+	"%{IncludeDir.glm}"
 }
 
 links {
@@ -114,13 +125,13 @@ defines {
 
 filter "configurations:Debug"
 defines "QT_DEBUG"
-buildoptions "/MDd"
+runtime "Debug"
 symbols "On"
 filter "configurations:Release"
 defines "QT_RELEASE"
-buildoptions "/MDd"
+runtime "Release"
 optimize "On"
 filter "configurations:Dist"
 defines "QT_DIST"
-buildoptions "/MDd"
+runtime "Release"
 optimize "On"

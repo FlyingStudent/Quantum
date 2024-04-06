@@ -20,6 +20,9 @@ namespace Quantum {
 		}
 		void setVSync(bool enabled)override;
 		bool IsVSync() const override ;
+		inline	virtual   void* getNativeWindow() const override {
+			return m_Window;
+	}
 	private:
 		virtual void init(const WindowProps& props);
 		virtual void shutDown();
