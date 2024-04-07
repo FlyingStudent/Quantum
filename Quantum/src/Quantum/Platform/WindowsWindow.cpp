@@ -3,6 +3,8 @@
 #include"Quantum/Events/ApplicationEvent.h"
 #include"Quantum/Events/KeyEvent.h"
 #include"Quantum/Events/MouseEvent.h"
+#include"Quantum/Renderer/GraphicsContext.h"
+#include"Quantum/Platform/OpenGL/OpenGLContext.h"
 #include<GLFW/glfw3.h>
 #include<glad\glad.h>
 namespace Quantum {
@@ -42,6 +44,14 @@ namespace Quantum {
 		s_GLFWInitialized = true;
 	}
 	m_Window = glfwCreateWindow((int)props.m_Width, (int)props.m_Height, m_Data.title.c_str(), nullptr, nullptr);
+	
+	m_Context = new OpenGLContext(m_Window);
+	m_Context->init();
+
+
+
+
+
 	glfwMakeContextCurrent(m_Window);
 	int status = gladLoadGLLoader((GLADloadproc )glfwGetProcAddress);
 	QT_CORE_ASSERT(status, "FAiled to initialize GLAD ");
@@ -131,7 +141,8 @@ namespace Quantum {
 	void WindowsWindow::onUpdate()
 	{
 		glfwPollEvents();
-		glfwSwapBuffers(m_Window);
+		m_Context->swapBuffers();
+		
 	}
 	void WindowsWindow::setVSync(bool enabled)
 	{

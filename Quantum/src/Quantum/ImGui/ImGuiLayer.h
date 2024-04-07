@@ -12,10 +12,13 @@ namespace Quantum {
 		ImGuiLayer();
 		~ImGuiLayer();
 
-		void onAttach();
-		void onDetach();
-		void onUpdate();
-		void onEvent(Event& event);
+		virtual void onAttach() override ;
+		virtual void onDetach() override ;
+		//virtual void onUpdate() override;
+		virtual void onImGuiRender() override;
+		void begin();
+		void end();
+		/*void onEvent(Event& event);
 	private:
 		bool onMouseButtonPressedEvent(MouseButtonPressedEvent& e);
 		bool onMouseButtonReleasedEvent(MouseButtonReleasedEvent& e);
@@ -24,7 +27,7 @@ namespace Quantum {
 		bool onKeyPressedEvent(KeyPressedEvent& e);
 		bool onKeyReleasedEvent(KeyReleasedEvent& e);
 		bool onKeyTypedEvent(KeyTypedEvent& e);
-		bool onWindowResizeEvent(WindowResizeEvent& e);
+		bool onWindowResizeEvent(WindowResizeEvent& e);*/
 
 	private:
 		float m_Time = 0.0f;

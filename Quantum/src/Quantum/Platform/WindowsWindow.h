@@ -1,5 +1,6 @@
 #pragma once
 #include"Quantum/Window.h"
+#include"Quantum/Renderer/GraphicsContext.h"
 struct GLFWwindow;
 namespace Quantum {
 
@@ -35,5 +36,7 @@ namespace Quantum {
 			EventCallbackFn EventCallback;
 		};
 		WindowData m_Data;
+		GraphicsContext *m_Context;
+		
 	};
 }
