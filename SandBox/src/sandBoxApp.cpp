@@ -1,6 +1,7 @@
 #include<Quantum.h>
 #include<iostream>
 #include<glm.hpp>
+#include"../ImGui/imgui.h"
 class ExampleLayer : public Quantum::Layer
 {
 public:
@@ -19,6 +20,14 @@ public:
 	{
 		QT_CLIENT_TRACE(event.toString());
 	}
+	
+	 void onImGuiRender() override
+	{
+		 ImGui::Begin("Test");
+		 ImGui::Text("Hello,World!");
+		 ImGui::End();
+}
+
 };
 class sandBoxApp: public Quantum::Application
 {
@@ -26,13 +35,11 @@ public:
 	sandBoxApp()
 	{
 		pushLayer(new ExampleLayer());
-		pushOverlay(new Quantum::ImGuiLayer());
 	}
 	~sandBoxApp()
 	{
 
 	}
-
 };
 
 //entry point function implementation

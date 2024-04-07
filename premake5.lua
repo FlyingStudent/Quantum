@@ -27,8 +27,10 @@ group ""
 
 project "Quantum"
 location "Quantum"
-kind "SharedLib"
+kind "StaticLib"
 language "C++"
+cppdialect "C++17"
+staticruntime "on"
 
 targetdir("bin/" .. outputDir .. "/%{prj.name}")
 objdir("bin-int/" .. outputDir .. "/%{prj.name}")
@@ -61,39 +63,35 @@ links {
 	"opengl32.lib"
 }
 filter "system:windows"
-cppdialect "C++17"
-staticruntime "off"
 systemversion "latest"
 
 defines {
 	"QT_PLATFORM_WINDOWS",
 	"QT_BUILD_DLL",
-	"GLFW_INCLUDE_NONE"
-}
-
-postbuildcommands {
-	("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputDir .. "/SandBox"),
-	('{COPY} %{cfg.buildtarget.relpath} "../bin/' .. outputDir .. '/SandBox/"')
+	"GLFW_INCLUDE_NONE",
+	"_CRT_SECURE_NO_WARNING"
 }
 
 filter "configurations:Debug"
 defines "QT_DEBUG"
 runtime "Debug"
-symbols "On"
+symbols "on"
 filter "configurations:Release"
 defines "QT_RELEASE"
 runtime "Release"
-optimize "On"
+optimize "on"
 filter "configurations:Dist"
 defines "QT_DIST"
 runtime "Release"
-optimize "On"
+optimize "on"
 
 --create SandBox project
 project "SandBox"
 location "SandBox"
 kind "ConsoleApp"
+cppdialect "C++17"
 language "C++"
+staticruntime "on"
 
 targetdir("bin/" .. outputDir .. "/%{prj.name}")
 objdir("bin-int/" .. outputDir .. "/%{prj.name}")
@@ -115,8 +113,6 @@ links {
 }
 
 filter "system:windows"
-cppdialect "C++17"
-staticruntime "off"
 systemversion "latest"
 
 defines {
@@ -126,12 +122,12 @@ defines {
 filter "configurations:Debug"
 defines "QT_DEBUG"
 runtime "Debug"
-symbols "On"
+symbols "on"
 filter "configurations:Release"
 defines "QT_RELEASE"
 runtime "Release"
-optimize "On"
+optimize "on"
 filter "configurations:Dist"
 defines "QT_DIST"
 runtime "Release"
-optimize "On"
+optimize "on"

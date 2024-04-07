@@ -1,7 +1,7 @@
 project "glad"
 kind "StaticLib"
 language "C"
-staticruntime "off"
+staticruntime "on"
 warnings "off"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -20,6 +20,10 @@ includedirs{
 
 filter "system:windows"
 systemversion "latest"
-staticruntime "On"
-filter {"system:windows", "configurations:Release"}
-buildoptions "/MT"
+
+filter "configurations:Debug"
+runtime "Debug"
+symbols "on"
+filter "configurations:Release"
+runtime "Release"
+optimize "on"
