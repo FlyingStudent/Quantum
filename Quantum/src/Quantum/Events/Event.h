@@ -1,6 +1,6 @@
 #pragma once
-#include"Quantum/Core.h"
-#include"Quantum/Log.h"
+#include"Quantum/Core/Base.h"
+#include"Quantum/Core/Log.h"
 #include<string>
 #include<functional>
 namespace Quantum {
@@ -21,44 +21,43 @@ namespace Quantum {
 		EventCategoryMouse = BIT(3),
 		EventCategoryMouseButton = BIT(4)
 	};
-#define EVENT_CLASS_TYPE(type) static EventType getStaticType() { return EventType::##type;}\
-virtual EventType getEventType() const override {return getStaticType();}\
-virtual const char*getName() const override { return #type;}
+#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::##type;}\
+virtual EventType GetEventType() const override {return GetStaticType();}\
+virtual const char*GetName() const override { return #type;}
 
-#define EVENT_CLASS_CATEGORY(category) virtual int getCategoryFlags() const override {return category;}
-	class QUANTUM_API Event {
-		friend class EventDispatcher;
+#define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override {return category;}
+	class Event {
 	public:
-		virtual EventType getEventType() const = 0;
-		virtual const char* getName() const = 0;
-		virtual int getCategoryFlags() const = 0;
-		virtual std::string toString() const {
-			return getName();
+		virtual ~Event() = default;
+
+		bool Handled = false;
+
+		virtual EventType GetEventType() const = 0;
+		virtual const char* GetName() const = 0;
+		virtual int GetCategoryFlags() const = 0;
+		virtual std::string ToString() const {
+			return GetName();
 		}
-		inline bool isInCategory(EventCategory category)
+		 bool IsInCategory(EventCategory category)
 		{
-			return getCategoryFlags() && category;
+			return GetCategoryFlags() && category;
 		}
-		inline bool isHandled() const { return m_Handled; }
-	protected :
-		bool m_Handled = false;
 	};
 	class EventDispatcher
 	{
-		template<typename T>
-		using EventFn = std::function<bool(T&)> ;
 	public:
 		EventDispatcher(Event& event)
 			:m_Event(event)
 		{
 
 		}
-		template<typename T> 
-		bool dispatch(EventFn<T> func)
+		// F will be deduced by the compiler
+		template<typename T,typename F> 
+		bool Dispatch(const F& func)
 		{
-			if (m_Event.getEventType() == T::getStaticType())
+			if (m_Event.GetEventType() == T::GetStaticType())
 			{
-				m_Event.m_Handled = func(*(T*)&m_Event);
+				m_Event.Handled |= func(static_cast<T&>(m_Event));
 				return true;
 			}
 			return false;
@@ -68,6 +67,6 @@ virtual const char*getName() const override { return #type;}
 	};
 	inline std::ostream& operator<<(std::ostream& os, const Event& e)
 	{
-		return os << e.toString();
+		return os << e.ToString();
 	}
 }

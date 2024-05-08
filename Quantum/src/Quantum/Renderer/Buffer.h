@@ -1,5 +1,5 @@
 #pragma once
-#include<initializer_list>
+
 namespace Quantum {
 	enum class ShaderDataType {
 		None = 0, Float, Float2, Float3, Float4 ,Mat3, Mat4, Int, Int2, Int3, Int4, Bool
@@ -29,14 +29,14 @@ namespace Quantum {
 		uint32_t Size;
 		uint32_t Offset;
 		bool Normalized;
-		BufferElement() {}	
+		BufferElement() = default;
 		BufferElement(ShaderDataType type, const std::string& name, bool normalized = false)
 			:Name(name),Type(type),Size(ShaderDataTypeSize(type)), Offset(0),Normalized(normalized)
 		{
 
 
 		}
-		uint32_t getComponentCount() const
+		uint32_t GetComponentCount() const
 		{
 			switch (Type)
 			{
@@ -62,10 +62,10 @@ namespace Quantum {
 		BufferLayout(const std::initializer_list<BufferElement>& elements)
 			:m_Elements(elements)
 		{
-			calculateOffsetAndStride();
+			CalculateOffsetAndStride();
 		}
-		inline uint32_t getStride() const { return m_Stride; }
-		inline const std::vector<BufferElement>& getElements() const { return m_Elements;
+		inline uint32_t GetStride() const { return m_Stride; }
+		inline const std::vector<BufferElement>& GetElements() const { return m_Elements;
 		}
 
 		std::vector<BufferElement>::iterator begin() { return m_Elements.begin(); }
@@ -75,14 +75,14 @@ namespace Quantum {
 		std::vector<BufferElement>::const_iterator end() const { return m_Elements.end(); }
 
 	private:
-		void calculateOffsetAndStride()
+		void CalculateOffsetAndStride()
 		{
-			uint32_t offset = 0;
+			uint32_t Offset = 0;
 			m_Stride = 0;
 			for (auto& element : m_Elements)
 			{
-				element.Offset = offset;
-				offset += element.Size;
+				element.Offset = Offset;
+				Offset += element.Size;
 				m_Stride += element.Size;
 			}
 		}
@@ -93,30 +93,35 @@ namespace Quantum {
 	class VertexBuffer
 	{
 	public : 
-		virtual ~VertexBuffer() {}
+		virtual ~VertexBuffer() = default;
 
 
 
-		virtual void bind() const = 0;
-		virtual void unBind() const = 0;
+		virtual void Bind() const = 0;
+		virtual void UnBind() const = 0;
+
+		virtual void SetData(void* data, uint32_t size) = 0;
 
 		virtual const BufferLayout& getLayout() const = 0;
-		virtual void setLayout(const BufferLayout& layout) = 0;
+		virtual void SetLayout(const BufferLayout& layout) = 0;
 
-		static VertexBuffer* create(float* vertices, uint32_t size);
+
+		static Ref<VertexBuffer> Create(uint32_t size);
+		static Ref<VertexBuffer> Create(float* vertices, uint32_t size);
 	};
+	//Currently Quantum supports only 32-bits index buffers
 	class IndexBuffer
 	{
 	public:
-		virtual ~IndexBuffer() {}
+		virtual ~IndexBuffer() = default;
 
 
 
-		virtual void bind()  const = 0;
-		virtual void unBind()const = 0;
+		virtual void Bind()  const = 0;
+		virtual void UnBind()const = 0;
 
-		static IndexBuffer* create(uint32_t* indecies, uint32_t count);
-			virtual uint32_t getCount() const = 0;
+		static Ref<IndexBuffer> Create(uint32_t* indecies, uint32_t count);
+			virtual uint32_t GetCount() const = 0;
 
 
 	};
